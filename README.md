@@ -5,7 +5,8 @@ A [Spicetify](https://spicetify.app) theme for Spotify: Catppuccin Mocha with a 
 - floating, rounded panels on a dark background;
 - playlist and album headers without a band: a soft glow from the cover;
 - the same rounded corners for covers, lists, fields and buttons;
-- translucent, blurred menus; thin scrollbars; a focus ring for the keyboard.
+- translucent, blurred menus; thin scrollbars; a focus ring for the keyboard;
+- in the player, the cover is a record that turns while the music plays.
 
 ![Teal](preview.png)
 
