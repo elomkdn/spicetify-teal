@@ -26,3 +26,11 @@ The first time, Spicetify needs `spicetify backup apply`.
 
 Spotify renames some of its classes: if a part of the theme stops applying, run
 `spicetify backup apply`. The selector that changed is then to be updated in `user.css`.
+
+## Credits
+
+The [Catppuccin](https://github.com/catppuccin/palette) palette — MIT.
+
+## License
+
+[GPL-3.0](LICENSE).

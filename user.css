@@ -59,15 +59,14 @@ html { background-color: var(--teal-mantle) !important; }
 
 /* --- the headers of playlists, albums and artists: no band, a soft glow from the cover over the picture and the title --- */
 .main-entityHeader-container > div:not(.main-entityHeader-contentWrapper) {
-  opacity: .55;
+  opacity: .3;
   background-image: none !important;
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%), linear-gradient(to right, #000 55%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  /* in px, centered on the cover: the same glow at any window width, gone before the header's end */
+  -webkit-mask-image: radial-gradient(ellipse 720px 170px at 130px 40px, #000 15%, transparent 100%);
 }
 /* the home page's header: the same glow, from what the pointer is on */
 div:has(> [data-testid="home-page"]) > div[style*="background-color"] {
-  opacity: .55;
+  opacity: .22;
   background-image: none !important;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .55) 45%, transparent 100%);
 }
@@ -78,8 +77,8 @@ section[data-testid$="-page"] > div[style*="background-color"],
 .main-topBar-background { background-color: var(--teal-base) !important; }
 .main-topBar-overlay { background: transparent !important; }
 
-.main-entityHeader-container { height: auto !important; min-height: 0 !important; }
-.main-entityHeader-contentWrapper { align-items: center; gap: 28px; padding-block: 32px 24px; }
+.main-entityHeader-container { height: auto !important; min-height: 0 !important; padding-bottom: 0 !important; }
+.main-entityHeader-contentWrapper { align-items: center; gap: 28px; padding-block: 32px 8px; }
 .main-entityHeader-imageContainer, .main-entityHeader-image { width: 148px !important; height: 148px !important; min-width: 148px; }
 .main-entityHeader-image { border-radius: var(--teal-panel) !important; box-shadow: 0 10px 28px rgba(17, 17, 27, .4) !important; }
 .main-entityHeader-title h1, .main-entityHeader-title .encore-text-headline-large {
@@ -88,17 +87,33 @@ section[data-testid$="-page"] > div[style*="background-color"],
   line-height: 1.15 !important;
   letter-spacing: -.015em;
 }
-/* "Playlist", "Album": a small label in the accent */
+/* "Playlist", "Album": a small label, quiet: the accent is for what is active */
 .main-entityHeader-headerText > span:first-child {
   font-size: .72rem !important;
   font-weight: 600 !important;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--teal-teal) !important;
+  color: var(--spice-subtext) !important;
 }
+/* a playlist's description: Spotify tints it with the cover's color */
+.main-entityHeader-headerText > div:not(.main-entityHeader-metaData), .main-entityHeader-headerText > div:not(.main-entityHeader-metaData) * { color: var(--spice-subtext) !important; }
 .main-entityHeader-metaData, .main-entityHeader-metaData * { color: var(--spice-subtext) !important; }
+/* Spotify writes this separator twice, as text and in CSS */
+.main-entityHeader-metaData > span:not(:has(a)) + .main-entityHeader-metaDataText::before { content: none; }
 /* an artist's banner fades into the panel */
-.main-view-container [style*="background-image: url("] { -webkit-mask-image: linear-gradient(#000 22%, transparent 63%); }
+[data-testid="background-image"] { -webkit-mask-image: linear-gradient(#000 22%, transparent 100%); }
+/* over it, the panel's color: the name stays readable on a light picture, and no edge at the bottom */
+[data-testid="background-image"] + div { background: linear-gradient(rgba(30, 30, 46, .3), rgba(30, 30, 46, .72) 55%, var(--teal-base)) !important; }
+/* the page's content starts opaque, at a height that changes with the window: the header fades into it */
+.main-entityHeader-container:not(.main-entityHeader-containerNormal)::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 140px;
+  background: linear-gradient(transparent, var(--teal-base));
+  pointer-events: none;
+}
+.main-entityHeader-container:not(.main-entityHeader-containerNormal) .main-entityHeader-contentWrapper { position: relative; z-index: 1; }
 
 /* the home page's "getting started" tips: one asks to watch a video, which Spotify cannot play on Linux */
 .main-home-content > section:has([data-onboarding-open-checklist-trigger]) { display: none !important; }
@@ -107,7 +122,7 @@ section[data-testid$="-page"] > div[style*="background-color"],
 [data-testid="lyrics-npv-section"] { background-image: linear-gradient(rgba(49, 50, 68, .72), rgba(49, 50, 68, .72)) !important; }
 
 /* the bars of the track being played: Spotify's green picture, in the accent */
-img[src*="equaliser"][src*="green"] { filter: hue-rotate(26deg) saturate(.42) brightness(1.42); }
+img[src*="equaliser"][src*="green"] { filter: hue-rotate(32.5deg) saturate(.32) brightness(1.44); }
 
 /* --- covers and cards ------------------------------------------------------------ */
 /* Spotify's placeholder color behind a cover shows at its rounded corners */
@@ -116,6 +131,9 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(26deg) saturate(.42) br
 .main-image-image:not(.main-cardImage-circular), .main-cardImage-imageWrapper:not(.main-cardImage-circular),
 .x-entityImage-imageContainer, .view-homeShortcutsGrid-imageContainer { border-radius: var(--teal-radius) !important; }
 .main-card-cardContainer { border-radius: var(--teal-panel) !important; }
+.main-card-cardContainer:hover { background-color: var(--teal-surface0) !important; }
+/* the small cover beside the play button keeps the corners of its frame */
+.main-actionBar-exploreButtonImageWrapper img { border-radius: 4px !important; }
 .view-homeShortcutsGrid-shortcut { border-radius: var(--teal-radius) !important; background-color: var(--teal-surface0) !important; overflow: hidden; }
 .view-homeShortcutsGrid-shortcut:hover { background-color: var(--teal-surface1) !important; }
 
@@ -124,6 +142,11 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(26deg) saturate(.42) br
   background-color: var(--teal-teal) !important;
   color: var(--teal-crust) !important;
 }
+/* the big play button of a page: lighter, it sits beside the title rather than over it */
+.main-actionBar-ActionBarRow .main-playButton-PlayButton button,
+.main-actionBar-ActionBarRow .main-playButton-PlayButton button > span { inline-size: 48px; block-size: 48px; min-inline-size: 48px; min-block-size: 48px; }
+/* a chip that is on: the accent */
+[data-encore-id="chip"][aria-checked="true"] > span { background-color: var(--teal-teal) !important; color: var(--teal-crust) !important; }
 [data-encore-id="buttonPrimary"]:not([aria-label]) > span,
 [data-encore-id="buttonSecondary"], [data-encore-id="chip"], [data-encore-id="chip"] > span { border-radius: var(--teal-radius) !important; }
 .main-dropDown-dropDown { border-radius: var(--teal-radius) !important; background-color: var(--teal-field) !important; }
@@ -131,9 +154,10 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(26deg) saturate(.42) br
 /* --- lists: the desktop's selection and hover ------------------------------------ */
 .main-trackList-trackListRow { border-radius: var(--teal-radius) !important; }
 .main-trackList-trackListRow:hover { background-color: var(--teal-surface0) !important; }
-.main-trackList-trackListRow[aria-selected="true"] { background-color: var(--teal-selection) !important; }
-.main-trackList-trackListRow[aria-selected="true"] *,
-.main-trackList-trackListRow[aria-selected="true"] a { color: var(--teal-crust) !important; fill: var(--teal-crust) !important; }
+[role="row"][aria-selected="true"] > .main-trackList-trackListRow { background-color: var(--teal-selection) !important; }
+[role="row"][aria-selected="true"] > .main-trackList-trackListRow * { color: var(--teal-crust) !important; fill: var(--teal-crust) !important; }
+/* the columns' header, stuck under the top bar when scrolling: the panel's color, not a lighter band */
+.main-trackList-trackListHeader { background-color: var(--teal-base) !important; box-shadow: none !important; }
 .main-yourLibraryX-listItemGroup [role="row"], .main-yourLibraryX-listItem > * { border-radius: var(--teal-radius) !important; }
 
 /* --- sliders: the teal track and the desktop's round handle ---------------------- */
@@ -156,7 +180,14 @@ input:checked ~ .x-toggle-indicatorWrapper .x-toggle-indicator { box-shadow: 0 0
 .main-contextMenu-menuItemButton { border-radius: 6px !important; }
 .main-contextMenu-menuItemButton:hover, .main-contextMenu-menuItemButton:focus { background-color: var(--teal-surface0) !important; }
 
+/* --- tooltips: Spotify gives them the panel's color, which hides them on the panel --- */
+[data-tippy-root] > [data-placement] > div:not(:has(.main-contextMenu-menu)) { background-color: var(--teal-surface0) !important; border-radius: 6px !important; }
+
+/* --- dialogs: the panels' corners -------------------------------------------------- */
+generic-modal [role="dialog"], .main-embedWidgetGenerator-container { border-radius: var(--teal-panel) !important; }
+
 /* --- scrollbars, thin ------------------------------------------------------------- */
+.os-theme-spotify.os-scrollbar { --os-size: 6px !important; }
 .os-scrollbar-handle { background-color: var(--teal-surface1) !important; border-radius: 4px !important; }
 .os-scrollbar-handle:hover { background-color: var(--teal-overlay) !important; }
 

@@ -4,5 +4,9 @@
   "preview": "preview.png",
   "readme": "README.md",
   "usercss": "user.css",
-  "schemes": "color.ini"
+  "schemes": "color.ini",
+  "authors": [
+    { "name": "Elom", "url": "https://github.com/elomkdn" }
+  ],
+  "tags": ["dark", "catppuccin"]
 }
