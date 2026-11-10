@@ -68,6 +68,8 @@ div:has(> [data-testid="track-visual-enhancement"]) ~ div:last-child::before { b
 .main-entityHeader-container > div:not(.main-entityHeader-contentWrapper) {
   opacity: .3;
   background-image: none !important;
+  /* half the cover's saturation: a hint of its hue, never a clash with the palette */
+  filter: saturate(.5);
   /* in px, centered on the cover: the same glow at any window width, gone before the header's end */
   -webkit-mask-image: radial-gradient(ellipse 720px 170px at 130px 40px, #000 15%, transparent 100%);
 }
@@ -75,6 +77,7 @@ div:has(> [data-testid="track-visual-enhancement"]) ~ div:last-child::before { b
 div:has(> [data-testid="home-page"]) > div[style*="background-color"] {
   opacity: .22;
   background-image: none !important;
+  filter: saturate(.5);
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .55) 45%, transparent 100%);
 }
 /* the tint under the header would make a second band */
