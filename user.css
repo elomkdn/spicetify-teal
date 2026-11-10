@@ -82,6 +82,9 @@ div:has(> [data-testid="home-page"]) > div[style*="background-color"] {
 }
 /* the tint under the header would make a second band */
 section[data-testid$="-page"] > div[style*="background-color"] { background: none !important; }
+/* the same tint behind the play button, in its newer forms: the seamless one, and the one at 70 % (not the artist banner's veil, also at 70 %) */
+div[data-seamless-gradient]:not([data-testid="entity-header"], [data-testid="entity-header"] > *),
+div[style*="--background-base-70"]:not([data-testid="background-image"] + div) { background: none !important; }
 /* the bar that replaces the header when scrolling */
 .main-topBar-background { background-color: var(--teal-base) !important; }
 .main-topBar-overlay { background: transparent !important; }
