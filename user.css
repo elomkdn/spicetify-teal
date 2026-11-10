@@ -8,6 +8,7 @@
   --teal-field: #2c2d3e;
   --teal-surface0: #313244;
   --teal-surface1: #45475a;
+  --teal-surface2: #585b70;
   --teal-overlay: #7f849c;
   --teal-text: #cdd6f4;
   --teal-crust: #11111b;
@@ -188,8 +189,10 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(32.5deg) saturate(.32) 
 .x-progressBar-sliderArea .progress-bar__slider,
 [data-testid="progress-bar-handle"] { background-color: var(--teal-text) !important; }
 
-/* a switch that is on: a shadow sets the light knob apart from the teal */
-input:checked ~ .x-toggle-indicatorWrapper .x-toggle-indicator { box-shadow: 0 0 0 1px rgba(17, 17, 27, .55), 0 1px 3px rgba(17, 17, 27, .6); }
+/* switches, like the desktop's: the track lights up in the accent and the knob stays dark, on or off */
+.x-toggle-indicatorWrapper { background-color: var(--teal-surface2) !important; }
+input:checked ~ .x-toggle-indicatorWrapper { background-color: var(--teal-teal) !important; }
+.x-toggle-indicator { background-color: var(--teal-crust) !important; box-shadow: none !important; }
 
 /* --- menus: translucent and blurred, like the desktop's ---------------------------- */
 .main-contextMenu-menu {
