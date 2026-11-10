@@ -35,28 +35,6 @@ aside[data-testid="now-playing-bar"] {
   padding-inline: 12px;
   box-sizing: border-box;
 }
-/* the cover: a record, which turns while the music plays */
-[data-testid="now-playing-bar"] :is([data-testid="CoverSlotCollapsed__container"], [data-testid="cover-art-container"], [data-testid="cover-art-button"], [data-testid="cover-art-button"] :is(div, img)) { border-radius: 50% !important; }
-[data-testid="now-playing-bar"] [data-testid="cover-art-button"] { position: relative; overflow: hidden; }
-[data-testid="now-playing-bar"] [data-testid="cover-art-button"] img { animation: teal-record 6s linear infinite paused; }
-/* the pause icon is there while the music plays: should Spotify redraw it, the record just stays still */
-[data-testid="now-playing-bar"]:has([data-testid="control-button-playpause"] path[d^="M2.7 1"]) [data-testid="cover-art-button"] img { animation-play-state: running; }
-@keyframes teal-record { to { transform: rotate(360deg); } }
-/* over it, and still: the light on the grooves, and the hole */
-[data-testid="now-playing-bar"] [data-testid="cover-art-button"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle, var(--teal-base) 0 4.5px, rgba(205, 214, 244, .45) 4.5px 5.25px, transparent 5.75px),
-    conic-gradient(from 20deg, rgba(255, 255, 255, .2), transparent 42deg 138deg, rgba(255, 255, 255, .16) 180deg, transparent 222deg 318deg, rgba(255, 255, 255, .2));
-  box-shadow: inset 0 0 0 1px rgba(17, 17, 27, .35);
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-testid="now-playing-bar"] [data-testid="cover-art-button"] img { animation: none; }
-}
 
 /* --- search and the top bar ------------------------------------------------------ */
 #global-nav-bar form[role="search"] input {
@@ -81,6 +59,10 @@ html { background-color: var(--teal-mantle) !important; }
 [data-testid="track-visual-enhancement"] ~ div[aria-hidden="true"]:has([draggable])::before { background: linear-gradient(rgba(30, 30, 46, .85) 0%, transparent 30% 80%, rgba(30, 30, 46, .8) 93%, var(--teal-base) 100%) !important; }
 [data-testid="track-visual-enhancement"] ~ div[aria-hidden="true"]:has([draggable])::after { background: linear-gradient(rgba(30, 30, 46, .63) 0%, rgba(30, 30, 46, .53) 30% 70%, var(--teal-base) 95%) !important; }
 div:has(> [data-testid="track-visual-enhancement"]) ~ div:last-child::before { background: linear-gradient(transparent 0%, rgba(30, 30, 46, .45) 18%, var(--teal-base) 89% 96%) !important; }
+/* the newer canvas: three veils laid over the loop (shade at the top, scrim at the bottom, the whole), in Spotify's near black */
+[data-canvas-surface] div[aria-hidden="true"] > div:empty:nth-child(1) { background: linear-gradient(rgba(30, 30, 46, .85) 0%, transparent 30%) !important; }
+[data-canvas-surface] div[aria-hidden="true"] > div:empty:nth-child(2) { background: linear-gradient(to bottom, transparent 0% var(--npv-canvas-bottom-scrim-clear-end, 55%), rgba(30, 30, 46, .8) var(--npv-canvas-bottom-scrim-mid-stop, 72%), var(--teal-base) var(--npv-canvas-bottom-scrim-solid-stop, 90%)) !important; }
+[data-canvas-surface] div[aria-hidden="true"] > div:empty:nth-child(3) { background: linear-gradient(rgba(30, 30, 46, .63) 0%, rgba(30, 30, 46, .53) 30% 70%, var(--teal-base) 95%) !important; }
 
 /* --- the headers of playlists, albums and artists: no band, a soft glow from the cover over the picture and the title --- */
 .main-entityHeader-container > div:not(.main-entityHeader-contentWrapper) {
@@ -120,10 +102,11 @@ section[data-testid$="-page"] > div[style*="background-color"] { background: non
   color: var(--spice-subtext) !important;
 }
 /* a playlist's description: Spotify tints it with the cover's color */
-.main-entityHeader-headerText > div:not(.main-entityHeader-metaData), .main-entityHeader-headerText > div:not(.main-entityHeader-metaData) * { color: var(--spice-subtext) !important; }
-.main-entityHeader-metaData, .main-entityHeader-metaData * { color: var(--spice-subtext) !important; }
+.main-entityHeader-headerText > div:not(:has(.main-entityHeader-metaDataText)), .main-entityHeader-headerText > div:not(:has(.main-entityHeader-metaDataText)) * { color: var(--spice-subtext) !important; }
+/* the line of details (author, titles, length): each piece is a metaDataText, their row has no name of its own */
+.main-entityHeader-metaDataText, .main-entityHeader-metaDataText * { color: var(--spice-subtext) !important; }
 /* Spotify writes this separator twice, as text and in CSS */
-.main-entityHeader-metaData > span:not(:has(a)) + .main-entityHeader-metaDataText::before { content: none; }
+.main-entityHeader-headerText span:not(:has(a)) + .main-entityHeader-metaDataText::before { content: none; }
 /* an artist's banner fades into the panel */
 [data-testid="background-image"] { -webkit-mask-image: linear-gradient(#000 22%, transparent 100%); }
 /* over it, the panel's color: the name stays readable on a light picture, and no edge at the bottom */
@@ -141,6 +124,8 @@ section[data-testid$="-page"] > div[style*="background-color"] { background: non
 
 /* the home page's "getting started" tips: one asks to watch a video, which Spotify cannot play on Linux */
 .main-home-content > section:has([data-onboarding-open-checklist-trigger]) { display: none !important; }
+/* the shelves of cards (home, search, recently played) fade at their end into a black written in Spotify's styles */
+section[data-shelf="carousel"] { --carousel-end-chevron-gradient: rgba(30, 30, 46, .7) !important; }
 
 /* the panel's lyrics: the cover's color, toned down like the headers */
 [data-testid="lyrics-npv-section"] { background-image: linear-gradient(rgba(49, 50, 68, .72), rgba(49, 50, 68, .72)) !important; }
