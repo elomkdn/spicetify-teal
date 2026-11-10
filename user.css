@@ -1,6 +1,7 @@
 /* Teal for Spotify: floating panels, soft headers, rounded covers, translucent menus.
-   Spotify renames its classes with its updates: if a part stops applying, run
-   `spicetify backup apply`, then look here for the selector that changed. */
+   Spotify renames its classes with each update, and Spicetify's readable names (main-*, Root__*, x-*)
+   catch up late, or not at all. So the theme holds on first to what Spotify keeps: ids, data-testid,
+   data-encore-id, ARIA roles, the markup's shape. A readable name is used only where nothing else is. */
 
 :root {
   --teal-mantle: #181825;
@@ -20,27 +21,29 @@
 }
 
 /* --- the window: floating panels on the mantle ---------------------------------- */
-.Root__top-container, .Root__globalNav, .Root__now-playing-bar { background-color: var(--teal-mantle) !important; }
-.Root__nav-bar, .Root__main-view, .Root__right-sidebar > * { border-radius: var(--teal-panel) !important; overflow: hidden; }
-.main-yourLibraryX-library { background-color: var(--teal-base) !important; border-radius: var(--teal-panel) !important; }
+/* the window's grid holds #main-view; the player's slot is the one holding the player */
+div:has(> #main-view), #global-nav-bar,
+div:has(> #main-view) > div:has([data-testid="now-playing-bar"]) { background-color: var(--teal-mantle) !important; }
+/* the library on the left, the page, and the panel on the right, which comes just after the page */
+#Desktop_LeftSidebar_Id, #main-view, #main-view + div > * { border-radius: var(--teal-panel) !important; overflow: hidden; }
+#Desktop_LeftSidebar_Id > nav > div { background-color: var(--teal-base) !important; border-radius: var(--teal-panel) !important; }
 
 /* the player: a floating panel too */
-.main-nowPlayingBar-nowPlayingBar {
+aside[data-testid="now-playing-bar"] {
   background-color: var(--teal-base) !important;
   border-radius: var(--teal-panel);
   padding-inline: 12px;
   box-sizing: border-box;
 }
 /* the cover: a record, which turns while the music plays */
-.main-nowPlayingBar-nowPlayingBar .main-coverSlotCollapsed-container,
-.main-nowPlayingBar-nowPlayingBar .main-nowPlayingWidget-coverArtContainer,
-.main-nowPlayingBar-nowPlayingBar .main-nowPlayingWidget-coverArt img { border-radius: 50% !important; }
-.main-nowPlayingBar-nowPlayingBar .main-nowPlayingWidget-coverArt img { animation: teal-record 6s linear infinite paused; }
+[data-testid="now-playing-bar"] :is([data-testid="CoverSlotCollapsed__container"], [data-testid="cover-art-container"], [data-testid="cover-art-button"], [data-testid="cover-art-button"] :is(div, img)) { border-radius: 50% !important; }
+[data-testid="now-playing-bar"] [data-testid="cover-art-button"] { position: relative; overflow: hidden; }
+[data-testid="now-playing-bar"] [data-testid="cover-art-button"] img { animation: teal-record 6s linear infinite paused; }
 /* the pause icon is there while the music plays: should Spotify redraw it, the record just stays still */
-.main-nowPlayingBar-nowPlayingBar:has([data-testid="control-button-playpause"] path[d^="M2.7 1"]) .main-nowPlayingWidget-coverArt img { animation-play-state: running; }
+[data-testid="now-playing-bar"]:has([data-testid="control-button-playpause"] path[d^="M2.7 1"]) [data-testid="cover-art-button"] img { animation-play-state: running; }
 @keyframes teal-record { to { transform: rotate(360deg); } }
 /* over it, and still: the light on the grooves, and the hole */
-.main-nowPlayingBar-nowPlayingBar .main-nowPlayingWidget-coverArt::after {
+[data-testid="now-playing-bar"] [data-testid="cover-art-button"]::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -52,21 +55,21 @@
   box-shadow: inset 0 0 0 1px rgba(17, 17, 27, .35);
 }
 @media (prefers-reduced-motion: reduce) {
-  .main-nowPlayingBar-nowPlayingBar .main-nowPlayingWidget-coverArt img { animation: none; }
+  [data-testid="now-playing-bar"] [data-testid="cover-art-button"] img { animation: none; }
 }
 
 /* --- search and the top bar ------------------------------------------------------ */
-.main-globalNav-searchInputContainer input,
-.main-globalNav-searchSection form > div {
+#global-nav-bar form[role="search"] input {
   background-color: var(--teal-field) !important;
   border-radius: var(--teal-radius) !important;
   box-shadow: none !important;
 }
-.main-globalNav-searchInputContainer input:focus {
+#global-nav-bar form[role="search"] input:focus {
   outline: 2px solid var(--teal-ring) !important;
   outline-offset: -2px;
 }
-.main-globalNav-navLink, .main-globalNav-link-icon, .main-globalNav-buddyFeed { border-radius: var(--teal-radius) !important; }
+/* home, back and forward, friends' activity */
+#global-nav-bar [data-encore-id="buttonTertiary"]:not(form *) { border-radius: var(--teal-radius) !important; }
 
 /* the sticky bars that appear when scrolling: the panel's color, not the page's tint */
 .main-view-container__scroll-node-child div[style*="--background-base"][style*="opacity"] { background-color: var(--teal-base) !important; }
@@ -74,11 +77,10 @@
 
 /* --- Spotify's own black, written in its styles: the panel's color instead -------- */
 html { background-color: var(--teal-mantle) !important; }
-.search-searchCategory-contentArea::before { background-image: linear-gradient(90deg, rgba(30, 30, 46, .7) 0%, transparent 100%) !important; }
-.search-searchCategory-contentArea::after { background-image: linear-gradient(-90deg, rgba(30, 30, 46, .7) 0%, transparent 100%) !important; }
-.main-nowPlayingView-canvasVisualEnhancement::before { background: linear-gradient(rgba(30, 30, 46, .85) 0%, transparent 30% 80%, rgba(30, 30, 46, .8) 93%, var(--teal-base) 100%) !important; }
-.main-nowPlayingView-canvasVisualEnhancement::after { background: linear-gradient(rgba(30, 30, 46, .63) 0%, rgba(30, 30, 46, .53) 30% 70%, var(--teal-base) 95%) !important; }
-.main-nowPlayingView-contextItemInfo::before { background: linear-gradient(transparent 0%, rgba(30, 30, 46, .45) 18%, var(--teal-base) 89% 96%) !important; }
+/* the panel on the right: the veil over the canvas, beside the visual, and the one under the title, the header's last child */
+[data-testid="track-visual-enhancement"] ~ div[aria-hidden="true"]:has([draggable])::before { background: linear-gradient(rgba(30, 30, 46, .85) 0%, transparent 30% 80%, rgba(30, 30, 46, .8) 93%, var(--teal-base) 100%) !important; }
+[data-testid="track-visual-enhancement"] ~ div[aria-hidden="true"]:has([draggable])::after { background: linear-gradient(rgba(30, 30, 46, .63) 0%, rgba(30, 30, 46, .53) 30% 70%, var(--teal-base) 95%) !important; }
+div:has(> [data-testid="track-visual-enhancement"]) ~ div:last-child::before { background: linear-gradient(transparent 0%, rgba(30, 30, 46, .45) 18%, var(--teal-base) 89% 96%) !important; }
 
 /* --- the headers of playlists, albums and artists: no band, a soft glow from the cover over the picture and the title --- */
 .main-entityHeader-container > div:not(.main-entityHeader-contentWrapper) {
@@ -94,8 +96,7 @@ div:has(> [data-testid="home-page"]) > div[style*="background-color"] {
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .55) 45%, transparent 100%);
 }
 /* the tint under the header would make a second band */
-section[data-testid$="-page"] > div[style*="background-color"],
-.playlist-playlist-actionBarBackground-background { background: none !important; }
+section[data-testid$="-page"] > div[style*="background-color"] { background: none !important; }
 /* the bar that replaces the header when scrolling */
 .main-topBar-background { background-color: var(--teal-base) !important; }
 .main-topBar-overlay { background: transparent !important; }
@@ -149,30 +150,29 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(32.5deg) saturate(.32) 
 
 /* --- covers and cards ------------------------------------------------------------ */
 /* Spotify's placeholder color behind a cover shows at its rounded corners */
-.main-cardImage-imageWrapper, .main-entityHeader-imageContainer, .main-trackList-rowImage, .x-entityImage-imageContainer { background-color: transparent !important; }
+.main-cardImage-imageWrapper, .main-entityHeader-imageContainer, .main-trackList-rowImage { background-color: transparent !important; }
 .view-homeShortcutsGrid-imageWrapper { background-color: transparent !important; box-shadow: none !important; border-radius: var(--teal-radius) !important; }
-.main-image-image:not(.main-cardImage-circular), .main-cardImage-imageWrapper:not(.main-cardImage-circular),
-.x-entityImage-imageContainer, .view-homeShortcutsGrid-imageContainer { border-radius: var(--teal-radius) !important; }
+.main-cardImage-image:not(.main-cardImage-circular), .main-cardImage-imageWrapper:not(.main-cardImage-circular),
+.view-homeShortcutsGrid-imageContainer { border-radius: var(--teal-radius) !important; }
+.main-cardImage-imageWrapper:not(.main-cardImage-circular) { --card-image-radius: var(--teal-radius); }
 .main-card-cardContainer { border-radius: var(--teal-panel) !important; }
 .main-card-cardContainer:hover { background-color: var(--teal-surface0) !important; }
-/* the small cover beside the play button keeps the corners of its frame */
-.main-actionBar-exploreButtonImageWrapper img { border-radius: 4px !important; }
 .view-homeShortcutsGrid-shortcut { border-radius: var(--teal-radius) !important; background-color: var(--teal-surface0) !important; overflow: hidden; }
 .view-homeShortcutsGrid-shortcut:hover { background-color: var(--teal-surface1) !important; }
 
 /* --- buttons: the accent, the desktop's radius ----------------------------------- */
-[data-encore-id="buttonPrimary"] > span, .main-playButton-PlayButton button > span {
+[data-encore-id="buttonPrimary"] > span {
   background-color: var(--teal-teal) !important;
   color: var(--teal-crust) !important;
 }
-/* the big play button of a page: lighter, it sits beside the title rather than over it */
-.main-actionBar-ActionBarRow .main-playButton-PlayButton button,
-.main-actionBar-ActionBarRow .main-playButton-PlayButton button > span { inline-size: 48px; block-size: 48px; min-inline-size: 48px; min-block-size: 48px; }
+/* the big play button of a page: lighter, it sits beside the title rather than over it (an icon: it has a label) */
+.main-actionBar-ActionBarRow [data-encore-id="buttonPrimary"][aria-label],
+.main-actionBar-ActionBarRow [data-encore-id="buttonPrimary"][aria-label] > span { inline-size: 48px; block-size: 48px; min-inline-size: 48px; min-block-size: 48px; }
 /* a chip that is on: the accent */
 [data-encore-id="chip"][aria-checked="true"] > span { background-color: var(--teal-teal) !important; color: var(--teal-crust) !important; }
 [data-encore-id="buttonPrimary"]:not([aria-label]) > span,
 [data-encore-id="buttonSecondary"], [data-encore-id="chip"], [data-encore-id="chip"] > span { border-radius: var(--teal-radius) !important; }
-.main-dropDown-dropDown { border-radius: var(--teal-radius) !important; background-color: var(--teal-field) !important; }
+[data-testid="settings-page"] select { border-radius: var(--teal-radius) !important; background-color: var(--teal-field) !important; }
 
 /* --- lists: the desktop's selection and hover ------------------------------------ */
 .main-trackList-trackListRow { border-radius: var(--teal-radius) !important; }
@@ -181,7 +181,8 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(32.5deg) saturate(.32) 
 [role="row"][aria-selected="true"] > .main-trackList-trackListRow * { color: var(--teal-crust) !important; fill: var(--teal-crust) !important; }
 /* the columns' header, stuck under the top bar when scrolling: the panel's color, not a lighter band */
 .main-trackList-trackListHeader { background-color: var(--teal-base) !important; box-shadow: none !important; }
-.main-yourLibraryX-listItemGroup [role="row"], .main-yourLibraryX-listItem > * { border-radius: var(--teal-radius) !important; }
+#Desktop_LeftSidebar_Id :is([role="row"], [role="listitem"]),
+#Desktop_LeftSidebar_Id :is([role="row"], [role="listitem"]) > * { border-radius: var(--teal-radius) !important; }
 
 /* --- sliders: the teal track and the desktop's round handle ---------------------- */
 .x-progressBar-progressBarBg { background-color: var(--teal-surface1) !important; border-radius: 3px; }
@@ -189,10 +190,12 @@ img[src*="equaliser"][src*="green"] { filter: hue-rotate(32.5deg) saturate(.32) 
 .x-progressBar-sliderArea .progress-bar__slider,
 [data-testid="progress-bar-handle"] { background-color: var(--teal-text) !important; }
 
-/* switches, like the desktop's: the track lights up in the accent and the knob stays dark, on or off */
-.x-toggle-indicatorWrapper { background-color: var(--teal-surface2) !important; }
-input:checked ~ .x-toggle-indicatorWrapper { background-color: var(--teal-teal) !important; }
-.x-toggle-indicator { background-color: var(--teal-crust) !important; box-shadow: none !important; }
+/* switches, like the desktop's: the track lights up in the accent and the knob stays dark, on or off.
+   Spotify's two switches (Encore's and the settings') share one shape: a label, a checkbox, then a track holding an empty knob.
+   A checkbox is shaped otherwise: its box sits in a label beside the input. */
+label > input[type="checkbox"] + span:has(> span:only-child:empty) { background-color: var(--teal-surface2) !important; }
+label > input[type="checkbox"]:checked + span:has(> span:only-child:empty) { background-color: var(--teal-teal) !important; }
+label > input[type="checkbox"] + span > span:only-child:empty { background-color: var(--teal-crust) !important; box-shadow: none !important; }
 
 /* --- menus: translucent and blurred, like the desktop's ---------------------------- */
 .main-contextMenu-menu {
@@ -209,7 +212,7 @@ input:checked ~ .x-toggle-indicatorWrapper { background-color: var(--teal-teal) 
 [data-tippy-root] > [data-placement] > div:not(:has(.main-contextMenu-menu)) { background-color: var(--teal-surface0) !important; border-radius: 6px !important; }
 
 /* --- dialogs: the panels' corners -------------------------------------------------- */
-generic-modal [role="dialog"], .main-embedWidgetGenerator-container { border-radius: var(--teal-panel) !important; }
+generic-modal [role="dialog"] { border-radius: var(--teal-panel) !important; }
 
 /* --- scrollbars, thin ------------------------------------------------------------- */
 .os-theme-spotify.os-scrollbar { --os-size: 6px !important; }
