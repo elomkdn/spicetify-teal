@@ -1,6 +1,6 @@
 {
   "name": "Teal",
-  "description": "Catppuccin Mocha with a teal accent: floating panels, soft headers, rounded covers and translucent menus.",
+  "description": "Catppuccin Mocha with a teal accent: floating panels, soft headers, rounded covers and menus.",
   "preview": "preview.png",
   "readme": "README.md",
   "usercss": "user.css",

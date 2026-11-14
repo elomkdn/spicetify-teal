@@ -1,4 +1,4 @@
-/* Teal for Spotify: floating panels, soft headers, rounded covers, translucent menus.
+/* Teal for Spotify: floating panels, soft headers, rounded covers and menus.
    Spotify renames its classes with each update, and Spicetify's readable names (main-*, Root__*, x-*)
    catch up late, or not at all. So the theme holds on first to what Spotify keeps: ids, data-testid,
    data-encore-id, ARIA roles, the markup's shape. A readable name is used only where nothing else is. */
@@ -188,10 +188,11 @@ label > input[type="checkbox"] + span:has(> span:only-child:empty) { background-
 label > input[type="checkbox"]:checked + span:has(> span:only-child:empty) { background-color: var(--teal-teal) !important; }
 label > input[type="checkbox"] + span > span:only-child:empty { background-color: var(--teal-crust) !important; box-shadow: none !important; }
 
-/* --- menus: translucent and blurred, like the desktop's ---------------------------- */
+/* --- menus: nearly opaque, without blur ---------------------------------------------
+   A backdrop-filter would make the menu the containing block of its submenu, which Spotify
+   nests inside it: the submenu would then open within the menu, behind scrollbars. */
 .main-contextMenu-menu {
-  background-color: rgba(30, 30, 46, .75) !important;
-  backdrop-filter: blur(18px);
+  background-color: rgba(30, 30, 46, .95) !important;
   border: 1px solid rgba(205, 214, 244, .08);
   border-radius: var(--teal-radius) !important;
   box-shadow: 0 8px 24px rgba(17, 17, 27, .5) !important;
